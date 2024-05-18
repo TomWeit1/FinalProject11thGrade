@@ -1,7 +1,6 @@
 import pygame
 from sys import exit
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, step):
         super().__init__()
@@ -12,6 +11,12 @@ class Player(pygame.sprite.Sprite):
         self.step = step  # controls the speed and direction
         self.move_x = 0
         self.move_y = 0
+        self.ammo = 5
+        self.regen_ammo = 1  # regen every regen_ammo seconds
+        self.max_ammo = 10
+        self.health = 10
+        self.start_time = 0
+        self.bullets = pygame.sprite.Group()
 
     def move_pressed_key(self, key):
         if key == pygame.K_w:
@@ -48,14 +53,31 @@ class Player(pygame.sprite.Sprite):
         else:
             self.rec.x += self.move_x
 
+    def ammo_regen(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.start_time >= player.regen_ammo * 1000 and self.ammo < self.max_ammo:
+            player.ammo += 1
+            self.start_time = current_time
+
+    def shoot_bullet(self):
+        if self.ammo > 0:
+            self.ammo -= 1
+            self.bullets.add(Bullet(5, self.rec.x + self.width / 2, self.rec.y))
+
 
 class Bullet (pygame.sprite.Sprite):
-    def __init__(self, step):
+    def __init__(self, step, x, y):
         super().__init__()
-        self.width = 5
-        self.height = 3
-        self.rec = pygame.Surface((self.width, self.height))
+        self.width = 25
+        self.height = 25
+        self.image = pygame.transform.scale(pygame.image.load('images/Bullet.png').convert_alpha(), (self.width, self.height))  # player skin - (120, 110)
+        self.rect = self.image.get_rect(midbottom=(x, y))
         self.step = step  # controls the speed and direction
+
+    def update(self):
+        self.rect.y -= self.step
+        if self.rect.y <= 0 or self.rect.y >= background_height:
+            self.kill()
 
 
 if __name__ == '__main__':
@@ -64,6 +86,7 @@ if __name__ == '__main__':
     pygame.display.set_caption("DUAL")
     clock = pygame.time.Clock()
     game_active = True
+    start_time = 0
 
     background_width = 1010
     background_height = 705
@@ -77,6 +100,7 @@ if __name__ == '__main__':
     player = Player(3)
 
     while True:
+        player.ammo_regen()
         screen.blit(background, (0, 0))  # initiate background
         screen.blit(s, (0, 350))
 
@@ -90,9 +114,15 @@ if __name__ == '__main__':
 
             if event.type == pygame.KEYDOWN:
                 player.move_pressed_key(event.key)
+                if event.key == pygame.K_SPACE:
+                    player.shoot_bullet()
 
         player.move_in_border()
         screen.blit(player.image, player.rec)
 
+        player.bullets.update()
+        player.bullets.draw(screen)
+
+        print(player.ammo)
         pygame.display.update()
-        clock.tick(80)
+        clock.tick(60)
