@@ -7,6 +7,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectId" id="2gbThb3pybzfzIcfGUeSh3NSe19" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -50,21 +57,37 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1515" height="207" key="GridCell.Tab.0.bottom" timestamp="1716030227034">
+    <state width="1515" height="207" key="GridCell.Tab.0.bottom" timestamp="1716034890368">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="207" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1716030227034" />
-    <state width="1515" height="207" key="GridCell.Tab.0.center" timestamp="1716030227033">
+    <state width="1515" height="207" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1716034890368" />
+    <state width="1515" height="207" key="GridCell.Tab.0.center" timestamp="1716034890368">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="207" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1716030227033" />
-    <state width="1515" height="207" key="GridCell.Tab.0.left" timestamp="1716030227033">
+    <state width="1515" height="207" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1716034890368" />
+    <state width="1515" height="207" key="GridCell.Tab.0.left" timestamp="1716034890368">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="207" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1716030227033" />
-    <state width="1515" height="207" key="GridCell.Tab.0.right" timestamp="1716030227033">
+    <state width="1515" height="207" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1716034890368" />
+    <state width="1515" height="207" key="GridCell.Tab.0.right" timestamp="1716034890368">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="207" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1716030227033" />
+    <state width="1515" height="207" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1716034890368" />
+    <state width="1515" height="258" key="GridCell.Tab.1.bottom" timestamp="1716034073558">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1515" height="258" key="GridCell.Tab.1.bottom/0.0.1536.816@0.0.1536.816" timestamp="1716034073558" />
+    <state width="1515" height="258" key="GridCell.Tab.1.center" timestamp="1716034073558">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1515" height="258" key="GridCell.Tab.1.center/0.0.1536.816@0.0.1536.816" timestamp="1716034073558" />
+    <state width="1515" height="258" key="GridCell.Tab.1.left" timestamp="1716034073558">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1515" height="258" key="GridCell.Tab.1.left/0.0.1536.816@0.0.1536.816" timestamp="1716034073558" />
+    <state width="1515" height="258" key="GridCell.Tab.1.right" timestamp="1716034073558">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1515" height="258" key="GridCell.Tab.1.right/0.0.1536.816@0.0.1536.816" timestamp="1716034073558" />
   </component>
 </project>
