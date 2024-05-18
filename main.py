@@ -74,16 +74,7 @@ if __name__ == '__main__':
     s = pygame.Surface((background_width, split_height)) # split screen
     s.fill((75, 50, 50, 200))
 
-    # player = pygame.image.load('images/FighterBase.png').convert_alpha()  # player skin - (120, 110)
-    # player_width = 80
-    # player_height = 74
-    # player = pygame.transform.scale(player, (player_height, player_width))
-    # player_rec = player.get_rect(midbottom = (background_width / 2, background_height - 100))
     player = Player(3)
-
-    # movement factors
-    move_y = 0
-    move_x = 0
 
     while True:
         screen.blit(background, (0, 0))  # initiate background
@@ -96,45 +87,12 @@ if __name__ == '__main__':
 
             if event.type == pygame.KEYUP:  # player movement
                 player.move_unpressed_key(event.key)
-                # if event.key == pygame.K_w:
-                #     move_y = max(move_y, 0)
-                # if event.key == pygame.K_s:
-                #     move_y = min(move_y, 0)
-                # if event.key == pygame.K_a:
-                #     move_x = max(move_x, 0)
-                # if event.key == pygame.K_d:
-                #     move_x = min(move_x, 0)
 
             if event.type == pygame.KEYDOWN:
                 player.move_pressed_key(event.key)
-                # if event.key == pygame.K_w:
-                #     move_y = -player.step
-                # if event.key == pygame.K_s:
-                #     move_y = player.step
-                # if event.key == pygame.K_a:
-                #     move_x = -player.step
-                # if event.key == pygame.K_d:
-                #     move_x = player.step
 
-        # if player.rec.y >= background_height - player.height:  # create floor
-        #     player.rec.y += min(0, player.move_y)
-        # elif player.rec.y <= (background_height) / 2 + split_height:  # create ceiling
-        #     player.rec.y += max(0, player.move_y)
-        # else:
-        #     player.rec.y += player.move_y
-        #
-        # if player.rec.x >= background_width - player.width + 5:  # create side 1
-        #     player.rec.x += min(0, player.move_x)
-        # elif player.rec.x <= 0:  # create side 2
-        #     player.rec.x += max(0, player.move_x)
-        # else:
-        #     player.rec.x += player.move_x
         player.move_in_border()
         screen.blit(player.image, player.rec)
-
-        # keys = pygame.key.get_pressed()
-        # if keys[pygame.K_w]:
-        #     print("l")
 
         pygame.display.update()
         clock.tick(80)
