@@ -1,6 +1,10 @@
 import pygame
 from sys import exit
 
+game_phase = 0
+background_width = 1062
+background_height = 708
+split_height = 8
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, step):
@@ -163,20 +167,28 @@ class Enemy(pygame.sprite.Sprite):
         if self.health <= 0:
             self.alive = False
 
-if __name__ == '__main__':
+
+def init_phase0_background():
+    start_background_image = pygame.transform.scale(pygame.image.load('images/background.png').convert_alpha(), (background_width, background_height))
+
+    start_background_rect = start_background_image.get_rect(topleft=(0, 0))
+    return start_background_image, start_background_rect
+
+
+def main():
+    global background_width, background_height, split_height, player, enemy
     pygame.init()
-    screen = pygame.display.set_mode((1010, 705))
+    screen = pygame.display.set_mode((1062, 708))
     pygame.display.set_caption("DUAL")
     clock = pygame.time.Clock()
     game_active = True
     start_time = 0
 
-    background_width = 1010
-    background_height = 705
+    start_background = init_phase0_background()
+
     background = pygame.Surface((background_width, background_height))  # create background
     background.fill((46, 34, 47, 255))
 
-    split_height = 5
     s = pygame.Surface((background_width, split_height)) # split screen
     s.fill((75, 50, 50, 200))
 
@@ -184,40 +196,50 @@ if __name__ == '__main__':
     enemy = Enemy(-3)
 
     while True:
-        player.ammo_regen()
-        screen.blit(background, (0, 0))  # initiate background
-        screen.blit(s, (0, 350))
+        if game_phase == 0:
+            screen.blit(start_background[0], start_background[1])
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+        if game_phase == 1:
+            player.ammo_regen()
+            screen.blit(background, (0, 0))  # initiate background
+            screen.blit(s, (0, 350))
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
 
-            if event.type == pygame.KEYUP:  # player movement
-                player.move_unpressed_key(event.key)
+                if event.type == pygame.KEYUP:  # player movement
+                    player.move_unpressed_key(event.key)
 
-            if event.type == pygame.KEYDOWN:
-                player.move_pressed_key(event.key)
-                if event.key == pygame.K_SPACE:
-                    player.shoot_bullet()
+                if event.type == pygame.KEYDOWN:
+                    player.move_pressed_key(event.key)
+                    if event.key == pygame.K_SPACE:
+                        player.shoot_bullet()
 
-        #render enemy
-        screen.blit(enemy.image, enemy.rect)
-        #render player
-        player.move_in_border()
-        screen.blit(player.image, player.rect)
+            #render enemy
+            screen.blit(enemy.image, enemy.rect)
+            #render player
+            player.move_in_border()
+            screen.blit(player.image, player.rect)
 
-        # player bullets shot
-        player.bullets.update()
-        player.bullets.draw(screen)
+            # player bullets shot
+            player.bullets.update()
+            player.bullets.draw(screen)
 
-        # display player ammo and health
-        screen.blit(player.display_health(), (20, background_height - 40))
-        screen.blit(player.display_ammo(), (background_width - 150, background_height - 40))
+            # display player ammo and health
+            screen.blit(player.display_health(), (20, background_height - 40))
+            screen.blit(player.display_ammo(), (background_width - 150, background_height - 40))
 
-        # display enemy ammo and health
-        screen.blit(enemy.display_health(), (20, 15))
+            # display enemy ammo and health
+            screen.blit(enemy.display_health(), (20, 15))
 
 
         pygame.display.update()
         clock.tick(60)
+
+if __name__ == '__main__':
+    main()
