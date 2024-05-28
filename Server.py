@@ -15,15 +15,16 @@ def start_game(cli1, cli2):
 def handle_msg(data, cli, id):
     msg = ""
     if data == "MOVE":
-        move = cli.recv(1).decode()
+        move = cli.recv(2).decode()
         msg = "MOVE" + str(id) + move
     if data == "SHOT":
-        pass
+        msg = "SHOT" + str(id) + "00"  # 00 is a filler to make this message length be 6
     if data == "OVER":
         pass
     if data == "EXIT":
        pass
 
+    print(msg)
     return msg
 
 

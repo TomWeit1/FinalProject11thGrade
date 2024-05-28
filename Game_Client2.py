@@ -1,7 +1,6 @@
 import pygame
 from sys import exit
 import socket
-import threading
 
 game_phase = 0
 background_width = 1062
@@ -180,49 +179,6 @@ def init_phase0_background():
     return start_background_image, start_background_rect
 
 
-def create_MOVE_msg(press, direction):
-    msg = "MOVE"
-    msg += str(press)  # press = 0/1, 0 meaning up, 1 meaning down
-    msg += str(direction)  # dir = 1,2,3,4
-    return msg
-
-
-def key_to_num(key):
-    # from a key w,a,s,d to int 1,2,3,4
-    if key == pygame.K_w:
-        return 1
-    if key == pygame.K_a:
-        return 2
-    if key == pygame.K_s:
-        return 3
-    if key == pygame.K_d:
-        return 4
-
-
-def num_to_key(num):
-    # from an int 1,2,3,4 to a direction
-    if num == 1:
-        return "up"
-    if num == 2:
-        return "left"
-    if num == 3:
-        return "down"
-    if num == 4:
-        return "right"
-
-
-def handle_recv(client, id):
-    while True:
-        msg = client.recv(7).decode()
-        if msg[0:3] == "MOVE":
-            if id == msg[4]:
-                pass
-            else:
-                pass
-
-
-
-
 def main():
     global background_width, background_height, split_height, player, enemy, game_phase, id
     pygame.init()
@@ -263,14 +219,11 @@ def main():
         elif game_phase == 1:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((IP, PORT))
-
             data = ""
             while not data:
                 data = client.recv(5).decode()
             id = data[4]
             game_phase = 2
-            recv_thread = threading.Thread(target=handle_recv, args=(client, id))
-            recv_thread.start()
         elif game_phase == 2:
             player.ammo_regen()
             screen.blit(background, (0, 0))  # initiate background
@@ -278,26 +231,16 @@ def main():
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit_msg = "EXIT"
-                    client.send(exit_msg.encode())
                     pygame.quit()
                     exit()
 
                 if event.type == pygame.KEYUP:  # player movement
-                    if event.key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
-                        msg_up = create_MOVE_msg(0, key_to_num(event.key))
-                        client.send(msg_up.encode())
                     player.move_unpressed_key(event.key)
 
                 if event.type == pygame.KEYDOWN:
                     player.move_pressed_key(event.key)
                     if event.key == pygame.K_SPACE:
-                        shoot_msg = "SHOT"
-                        client.send(shoot_msg.encode())
                         player.shoot_bullet()
-                    elif event.key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
-                        msg_down = create_MOVE_msg(1, key_to_num(event.key))
-                        client.send(msg_down.encode())
 
             #render enemy
             screen.blit(enemy.image, enemy.rect)
@@ -316,10 +259,9 @@ def main():
             # display enemy ammo and health
             screen.blit(enemy.display_health(), (20, 15))
 
+
         pygame.display.update()
         clock.tick(60)
-    client.close()
-
 
 if __name__ == '__main__':
     main()
