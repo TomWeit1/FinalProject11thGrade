@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 import socket
+import threading
 
 game_phase = 0
 background_width = 1062
@@ -29,29 +30,29 @@ class Player(pygame.sprite.Sprite):
         self.bullets = pygame.sprite.Group()
 
     def move_pressed_key(self, key):
-        if key == pygame.K_w:
+        if key == "up":
             self.move_y = -self.step
-        if key == pygame.K_s:
+        if key == "down":
             self.move_y = self.step
-        if key == pygame.K_a:
+        if key == "left":
             self.move_x = -self.step
-        if key == pygame.K_d:
+        if key == "right":
             self.move_x = self.step
 
     def move_unpressed_key(self, key):
-        if key == pygame.K_w:
+        if key == "up":
             self.move_y = max(self.move_y, 0)
-        if key == pygame.K_s:
+        if key == "down":
             self.move_y = min(self.move_y, 0)
-        if key == pygame.K_a:
+        if key == "left":
             self.move_x = max(self.move_x, 0)
-        if key == pygame.K_d:
+        if key == "right":
             self.move_x = min(self.move_x, 0)
 
     def move_in_border(self):
         if self.rect.y >= background_height - self.height:  # create floor
             self.rect.y += min(0, self.move_y)
-        elif self.rect.y <= background_height / 2 + split_height:  # create ceiling
+        elif self.rect.y <= background_height / 2 + split_height / 2:  # create ceiling
             self.rect.y += max(0, self.move_y)
         else:
             self.rect.y += self.move_y
@@ -116,7 +117,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(pygame.image.load('images/FighterBase.png').convert_alpha(),
                                             (self.width, self.height))  # player skin - (120, 110)
         self.image = pygame. transform. rotate(self.image, 180)
-        self.rect = self.image.get_rect(midbottom=(background_width / 2, 100))
+        self.rect = self.image.get_rect(midbottom=(background_width / 2, 100 + self.height))
         self.step = step  # controls the speed and direction
         self.move_x = 0
         self.move_y = 0
@@ -133,9 +134,9 @@ class Enemy(pygame.sprite.Sprite):
         return health
 
     def move_pressed_key(self, key):
-        if key == "down":
-            self.move_y = -self.step
         if key == "up":
+            self.move_y = -self.step
+        if key == "down":
             self.move_y = self.step
         if key == "left":
             self.move_x = -self.step
@@ -143,19 +144,19 @@ class Enemy(pygame.sprite.Sprite):
             self.move_x = self.step
 
     def move_unpressed_key(self, key):
-        if key == "down":
-            self.move_y = max(self.move_y, 0)
         if key == "up":
             self.move_y = min(self.move_y, 0)
+        if key == "down":
+            self.move_y = max(self.move_y, 0)
         if key == "left":
-            self.move_x = max(self.move_x, 0)
-        if key == "right":
             self.move_x = min(self.move_x, 0)
+        if key == "right":
+            self.move_x = max(self.move_x, 0)
 
     def move_in_border(self):
-        if self.rect.y >= background_height - self.height:  # create floor
+        if self.rect.y >= (background_height - split_height) / 2 - self.height - 2:  # create floor
             self.rect.y += min(0, self.move_y)
-        elif self.rect.y <= background_height / 2 + split_height:  # create ceiling
+        elif self.rect.y <= 0:  # create ceiling
             self.rect.y += max(0, self.move_y)
         else:
             self.rect.y += self.move_y
@@ -179,6 +180,55 @@ def init_phase0_background():
     return start_background_image, start_background_rect
 
 
+def create_MOVE_msg(press, direction):
+    msg = "MOVE"
+    msg += str(press)  # press = 0/1, 0 meaning up, 1 meaning down
+    msg += str(direction)  # dir = 1,2,3,4
+    return msg
+
+
+def key_to_num(key):
+    # from a key w,a,s,d to int 1,2,3,4
+    if key == pygame.K_w:
+        return 1
+    if key == pygame.K_a:
+        return 2
+    if key == pygame.K_s:
+        return 3
+    if key == pygame.K_d:
+        return 4
+
+
+def num_to_key(num):
+    # from an int 1,2,3,4 to a direction
+    if num == 1:
+        return "up"
+    if num == 2:
+        return "left"
+    if num == 3:
+        return "down"
+    if num == 4:
+        return "right"
+
+
+def handle_recv(client, id):
+    while True:
+        msg = client.recv(7).decode()
+        if msg[0:4] == "MOVE":
+            if id == int(msg[4]):
+                if int(msg[5]) == 0:
+                    player.move_unpressed_key(num_to_key(int(msg[6])))
+                if int(msg[5]) == 1:
+                    player.move_pressed_key(num_to_key(int(msg[6])))
+            else:
+                if int(msg[5]) == 0:
+                    enemy.move_unpressed_key(num_to_key(int(msg[6])))
+                if int(msg[5]) == 1:
+                    enemy.move_pressed_key(num_to_key(int(msg[6])))
+
+
+
+
 def main():
     global background_width, background_height, split_height, player, enemy, game_phase, id
     pygame.init()
@@ -193,8 +243,8 @@ def main():
     background = pygame.Surface((background_width, background_height))  # create background
     background.fill((46, 34, 47, 255))
 
-    s = pygame.Surface((background_width, split_height)) # split screen
-    s.fill((75, 50, 50, 200))
+    split = pygame.Surface((background_width, split_height)) # split screen
+    split.fill((75, 50, 50, 200))
 
     player = Player(3)
     enemy = Enemy(-3)
@@ -219,34 +269,51 @@ def main():
         elif game_phase == 1:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((IP, PORT))
+
             data = ""
             while not data:
                 data = client.recv(5).decode()
-            id = data[4]
+            id = int(data[4])
             game_phase = 2
+            recv_thread = threading.Thread(target=handle_recv, args=(client, id))
+            recv_thread.start()
         elif game_phase == 2:
             player.ammo_regen()
             screen.blit(background, (0, 0))  # initiate background
-            screen.blit(s, (0, 350))
+            screen.blit(split, (0, (background_height - split_height) / 2))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    exit_msg = "EXIT"
+                    client.send(exit_msg.encode())
                     pygame.quit()
                     exit()
 
                 if event.type == pygame.KEYUP:  # player movement
-                    player.move_unpressed_key(event.key)
+                    if event.key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
+                        msg_up = create_MOVE_msg(0, key_to_num(event.key))
+                        client.send(msg_up.encode())
+                    # player.move_unpressed_key(event.key)
 
                 if event.type == pygame.KEYDOWN:
-                    player.move_pressed_key(event.key)
+                    # player.move_pressed_key(event.key)
                     if event.key == pygame.K_SPACE:
-                        player.shoot_bullet()
+                        shoot_msg = "SHOT"
+                        client.send(shoot_msg.encode())
+                        # player.shoot_bullet()
+                    elif event.key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
+                        msg_down = create_MOVE_msg(1, key_to_num(event.key))
+                        client.send(msg_down.encode())
 
             #render enemy
             screen.blit(enemy.image, enemy.rect)
             #render player
             player.move_in_border()
             screen.blit(player.image, player.rect)
+
+            #render enemy
+            enemy.move_in_border()
+            screen.blit(enemy.image, enemy.rect)
 
             # player bullets shot
             player.bullets.update()
@@ -259,9 +326,10 @@ def main():
             # display enemy ammo and health
             screen.blit(enemy.display_health(), (20, 15))
 
-
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(80)
+    client.close()
+
 
 if __name__ == '__main__':
     main()
