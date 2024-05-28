@@ -6,6 +6,7 @@ background_width = 1062
 background_height = 708
 split_height = 8
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, step):
         super().__init__()
@@ -109,10 +110,8 @@ class Enemy(pygame.sprite.Sprite):
         self.alive = True
         self.width = 80
         self.height = 74
-        self.image = pygame.transform.scale(pygame.image.load('images/FighterBase.png').convert_alpha(),
-                                            (self.width, self.height))  # player skin - (120, 110)
-        self.image = pygame. transform. rotate(self.image, 180)
-        self.rect = self.image.get_rect(midbottom=(background_width / 2, 100))
+        self.image = pygame.transform.scale(pygame.image.load('images/FighterBase.png').convert_alpha(), (self.width, self.height))  # player skin - (120, 110)
+        self.rect = self.image.get_rect(midbottom=(background_width / 2, 100 + self.height))
         self.step = step  # controls the speed and direction
         self.move_x = 0
         self.move_y = 0
@@ -129,9 +128,9 @@ class Enemy(pygame.sprite.Sprite):
         return health
 
     def move_pressed_key(self, key):
-        if key == "down":
-            self.move_y = -self.step
         if key == "up":
+            self.move_y = -self.step
+        if key == "down":
             self.move_y = self.step
         if key == "left":
             self.move_x = -self.step
@@ -139,19 +138,19 @@ class Enemy(pygame.sprite.Sprite):
             self.move_x = self.step
 
     def move_unpressed_key(self, key):
-        if key == "down":
-            self.move_y = max(self.move_y, 0)
         if key == "up":
             self.move_y = min(self.move_y, 0)
+        if key == "down":
+            self.move_y = max(self.move_y, 0)
         if key == "left":
-            self.move_x = max(self.move_x, 0)
-        if key == "right":
             self.move_x = min(self.move_x, 0)
+        if key == "right":
+            self.move_x = max(self.move_x, 0)
 
     def move_in_border(self):
-        if self.rect.y >= background_height - self.height:  # create floor
+        if self.rect.y >= (background_height - split_height) / 2 - self.height - 2:  # create floor
             self.rect.y += min(0, self.move_y)
-        elif self.rect.y <= background_height / 2 + split_height:  # create ceiling
+        elif self.rect.y <= 0:  # create ceiling
             self.rect.y += max(0, self.move_y)
         else:
             self.rect.y += self.move_y
@@ -221,11 +220,13 @@ def main():
                         player.shoot_bullet()
 
             #render enemy
-            screen.blit(enemy.image, enemy.rect)
             #render player
             player.move_in_border()
             screen.blit(player.image, player.rect)
 
+            enemy.move_pressed_key("down")
+            enemy.move_in_border()
+            screen.blit(enemy.image, enemy.rect)
             # player bullets shot
             player.bullets.update()
             player.bullets.draw(screen)

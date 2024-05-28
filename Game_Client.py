@@ -305,8 +305,6 @@ def main():
                         msg_down = create_MOVE_msg(1, key_to_num(event.key))
                         client.send(msg_down.encode())
 
-            #render enemy
-            screen.blit(enemy.image, enemy.rect)
             #render player
             player.move_in_border()
             screen.blit(player.image, player.rect)
