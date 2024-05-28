@@ -10,7 +10,9 @@ def main():
 
     connected = True
     while connected:
-        pass
+        print(client.recv(5).decode())
+        msg = "MOVE1"
+        client.send(msg.encode())
 
 
 if __name__ == '__main__':

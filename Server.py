@@ -6,13 +6,65 @@ IP = 'localhost'
 PORT = 12345
 
 
+def start_game(cli1, cli2):
+    msg = "STRT"
+    cli1.send((msg + "1").encode())
+    cli2.send((msg + "2").encode())
+
+
+def handle_msg(data, cli, id):
+    msg = ""
+    if data == "MOVE":
+        move = cli.recv(1).decode()
+        msg = "MOVE" + str(id) + move
+    if data == "SHOT":
+        pass
+    if data == "OVER":
+        pass
+    if data == "EXIT":
+       pass
+
+    return msg
+
+
+def send_both(msg, cli1, cli2):
+    cli1.send(msg.encode())
+    cli2.send(msg.encode())
+
+
+def handle(cli, id, other_cli):
+    while True:
+        try:
+            data = cli.recv(4).decode()
+            msg = handle_msg(data, cli, id)
+            send_both(msg, cli, other_cli)
+
+        except socket.error as err:
+            print(f'Socket Error exit client loop: err:  {err}')
+            break
+        except Exception as  err:
+            print(f'General Error %s exit client loop: {err}')
+            print(traceback.format_exc())
+            break
+
+
 def client_handler(cli1, addr1, cli2, addr2):
     print(f"Client {cli1} connected with addr: {addr1}")
     print(f"Client {cli2} connected with addr: {addr2}")
 
-    connected = True
-    while connected:
-        pass
+    connected = False
+
+    try:
+        start_game(cli1, cli2)
+        connected = True
+    except Exception as err:
+        print(err)
+
+    if connected:
+        thread1 = threading.Thread(target=handle, args=(cli1, 1, cli2))
+        thread1.start()
+        thread2 = threading.Thread(target=handle, args=(cli2, 2, cli1))
+        thread2.start()
 
 
 def main():
@@ -33,7 +85,7 @@ def main():
 
         thread = threading.Thread(target=client_handler, args=(cli1, addr1, cli2, addr2))
         thread.start()
-        #print(f"active connections: {threading.activecount() - 1}")
+        # print(f"active connections: {threading.activecount() - 1}")
 
 
 if __name__ == '__main__':

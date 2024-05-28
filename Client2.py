@@ -10,7 +10,7 @@ def main():
 
     connected = True
     while connected:
-        pass
+        print(client.recv(5).decode())
 
 
 if __name__ == '__main__':
