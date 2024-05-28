@@ -6,8 +6,9 @@ IP = 'localhost'
 PORT = 12345
 
 
-def client_handler(cli, addr):
-    print(f"Client {cli} connected with addr: {addr}")
+def client_handler(cli1, addr1, cli2, addr2):
+    print(f"Client {cli1} connected with addr: {addr1}")
+    print(f"Client {cli2} connected with addr: {addr2}")
 
     connected = True
     while connected:
@@ -25,11 +26,14 @@ def main():
     srv_sock.listen(5)
 
     while True:
-        print("Waiting for connections")
-        cli, addr = srv_sock.accept()
-        thread = threading.Thread(target=client_handler, args=(cli, addr))
+        print("Waiting for connection 1\n")
+        cli1, addr1 = srv_sock.accept()
+        print("Waiting for connection 2\n")
+        cli2, addr2 = srv_sock.accept()
+
+        thread = threading.Thread(target=client_handler, args=(cli1, addr1, cli2, addr2))
         thread.start()
-        print(f"active connections: {threading.activeCount() - 1}")
+        #print(f"active connections: {threading.activecount() - 1}")
 
 
 if __name__ == '__main__':

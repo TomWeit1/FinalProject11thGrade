@@ -1,7 +1,7 @@
 import pygame
 from sys import exit
 
-game_phase = 0
+game_phase = 1
 background_width = 1062
 background_height = 708
 split_height = 8
