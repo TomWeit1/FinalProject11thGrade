@@ -110,7 +110,9 @@ class Enemy(pygame.sprite.Sprite):
         self.alive = True
         self.width = 80
         self.height = 74
-        self.image = pygame.transform.scale(pygame.image.load('images/FighterBase.png').convert_alpha(), (self.width, self.height))  # player skin - (120, 110)
+        self.image = pygame.transform.scale(pygame.image.load('images/FighterBase.png').convert_alpha(),
+                                            (self.width, self.height))  # player skin - (120, 110)
+        self.image = pygame. transform. rotate(self.image, 180)
         self.rect = self.image.get_rect(midbottom=(background_width / 2, 100 + self.height))
         self.step = step  # controls the speed and direction
         self.move_x = 0
@@ -161,6 +163,17 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.x += max(0, self.move_x)
         else:
             self.rect.x += self.move_x
+
+    def ammo_regen(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.start_time >= player.regen_ammo * 1000 and self.ammo < self.max_ammo:
+            player.ammo += 1
+            self.start_time = current_time
+
+    def shoot_bullet(self):
+        if self.ammo > 0:
+            self.ammo -= 1
+            self.bullets.add(Bullet(-5, self.rect.x + self.width / 2, self.rect.y + self.height))
 
     def is_alive(self):
         if self.health <= 0:
@@ -224,7 +237,6 @@ def main():
             player.move_in_border()
             screen.blit(player.image, player.rect)
 
-            enemy.move_pressed_key("down")
             enemy.move_in_border()
             screen.blit(enemy.image, enemy.rect)
             # player bullets shot

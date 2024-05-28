@@ -20,7 +20,8 @@ def handle_msg(data, cli, id):
     if data == "SHOT":
         msg = "SHOT" + str(id) + "00"  # 00 is a filler to make this message length be 6
     if data == "OVER":
-        pass
+        loser_id = cli.recv(1).decode()
+        msg = "OVER" + loser_id
     if data == "EXIT":
        pass
 

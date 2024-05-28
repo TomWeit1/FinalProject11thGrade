@@ -52,7 +52,7 @@ class Player(pygame.sprite.Sprite):
     def move_in_border(self):
         if self.rect.y >= background_height - self.height:  # create floor
             self.rect.y += min(0, self.move_y)
-        elif self.rect.y <= background_height / 2 + split_height / 2:  # create ceiling
+        elif self.rect.y <= background_height / 2 + split_height / 2 + 2:  # create ceiling
             self.rect.y += max(0, self.move_y)
         else:
             self.rect.y += self.move_y
@@ -64,10 +64,13 @@ class Player(pygame.sprite.Sprite):
         else:
             self.rect.x += self.move_x
 
-    def ammo_regen(self):
+    def ammo_regen(self, enemy):
         current_time = pygame.time.get_ticks()
-        if current_time - self.start_time >= player.regen_ammo * 1000 and self.ammo < self.max_ammo:
-            player.ammo += 1
+        if current_time - self.start_time >= player.regen_ammo * 1000:
+            if self.ammo < self.max_ammo:
+                player.ammo += 1
+            if enemy.ammo < enemy.max_ammo:
+                enemy.ammo += 1
             self.start_time = current_time
 
     def shoot_bullet(self):
@@ -88,6 +91,9 @@ class Player(pygame.sprite.Sprite):
     def is_alive(self):
         if self.health <= 0:
             self.alive = False
+            game_over_msg = "OVER"
+            game_over_msg += id
+            client.send(game_over_msg.encode())
 
 
 class Bullet (pygame.sprite.Sprite):
@@ -96,6 +102,8 @@ class Bullet (pygame.sprite.Sprite):
         self.width = 25
         self.height = 25
         self.image = pygame.transform.scale(pygame.image.load('images/Bullet.png').convert_alpha(), (self.width, self.height))  # player skin - (120, 110)
+        if step < 0:
+            self.image = pygame.transform.rotate(self.image, 180)
         self.rect = self.image.get_rect(midbottom=(x, y))
         self.step = step  # controls the speed and direction
 
@@ -105,7 +113,9 @@ class Bullet (pygame.sprite.Sprite):
             self.kill()
         if pygame.sprite.spritecollide(enemy, player.bullets, True):
             enemy.health -= 1
-            enemy.is_alive()
+        if pygame.sprite.spritecollide(player, enemy.bullets, True):
+            player.health -= 1
+            player.is_alive()
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -168,9 +178,10 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self.rect.x += self.move_x
 
-    def is_alive(self):
-        if self.health <= 0:
-            self.alive = False
+    def shoot_bullet(self):
+        if self.ammo > 0:
+            self.ammo -= 1
+            self.bullets.add(Bullet(-5, self.rect.x + self.width / 2, self.rect.y + self.height))
 
 
 def init_phase0_background():
@@ -211,9 +222,9 @@ def num_to_key(num):
         return "right"
 
 
-def handle_recv(client, id):
+def handle_recv(cli, id):
     while True:
-        msg = client.recv(7).decode()
+        msg = cli.recv(7).decode()
         if msg[0:4] == "MOVE":
             if id == int(msg[4]):
                 if int(msg[5]) == 0:
@@ -225,12 +236,20 @@ def handle_recv(client, id):
                     enemy.move_unpressed_key(num_to_key(int(msg[6])))
                 if int(msg[5]) == 1:
                     enemy.move_pressed_key(num_to_key(int(msg[6])))
+        elif msg[0:4] == "SHOT":
+            if id == int(msg[4]):
+                player.shoot_bullet()
+            else:
+                enemy.shoot_bullet()
+        if msg[0:4] == "OVER":
+            print(msg[4])
+            game_phase = 2
 
 
 
 
 def main():
-    global background_width, background_height, split_height, player, enemy, game_phase, id
+    global background_width, background_height, split_height, player, enemy, game_phase, id, client
     pygame.init()
     screen = pygame.display.set_mode((1062, 708))
     pygame.display.set_caption("DUAL")
@@ -258,14 +277,16 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        game_phase = 1
-                        screen.blit(start_background[0], start_background[1])
-                        font = pygame.font.Font("font/Pixeltype.ttf", 80)
-                        text = font.render("Waiting for another player to join", False, "white")
-                        screen.blit(text, (120, background_height / 2 - 100))
+                        game_phase = 0.5
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+        elif game_phase == 0.5:  # in between phases to set background
+            screen.blit(start_background[0], start_background[1])
+            font = pygame.font.Font("font/Pixeltype.ttf", 80)
+            text = font.render("Waiting for another player to join", False, "white")
+            screen.blit(text, (120, background_height / 2 - 100))
+            game_phase = 1
         elif game_phase == 1:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((IP, PORT))
@@ -278,7 +299,7 @@ def main():
             recv_thread = threading.Thread(target=handle_recv, args=(client, id))
             recv_thread.start()
         elif game_phase == 2:
-            player.ammo_regen()
+            player.ammo_regen(enemy)
             screen.blit(background, (0, 0))  # initiate background
             screen.blit(split, (0, (background_height - split_height) / 2))
 
@@ -317,6 +338,10 @@ def main():
             player.bullets.update()
             player.bullets.draw(screen)
 
+            # player bullets shot
+            enemy.bullets.update()
+            enemy.bullets.draw(screen)
+
             # display player ammo and health
             screen.blit(player.display_health(), (20, background_height - 40))
             screen.blit(player.display_ammo(), (background_width - 150, background_height - 40))
@@ -325,7 +350,7 @@ def main():
             screen.blit(enemy.display_health(), (20, 15))
 
         pygame.display.update()
-        clock.tick(80)
+        clock.tick(60)
     client.close()
 
 
