@@ -23,7 +23,7 @@ def handle_msg(data, cli, id):
         loser_id = cli.recv(1).decode()
         msg = "OVER" + loser_id
     if data == "EXIT":
-       pass
+        msg = "EXIT" + str(id)
 
     print(msg)
     return msg

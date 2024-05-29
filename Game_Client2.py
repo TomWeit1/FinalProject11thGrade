@@ -244,6 +244,8 @@ def handle_recv(cli, id):
                     enemy.shoot_bullet()
             if msg[0:4] == "OVER":
                 reset_game(int(msg[4]))
+            if msg[0:4] == "EXIT" and int(msg[4]) != id:
+                reset_game(3)
         except:
             pass
 
@@ -251,9 +253,11 @@ def handle_recv(cli, id):
 def reset_game(loser):
     global over_msg
     if id == loser:
-        over_msg = "You lost the match, press space to go back to the menu"
+        over_msg = "You lost the match"
+    elif loser == 3:  # if other player quit
+        over_msg = "Other player quit"
     else:
-        over_msg = "You won! good job! press space to go back to the menu"
+        over_msg = "You won! good job!"
     global game_phase
     game_phase = 3
 
@@ -320,7 +324,7 @@ def main():
                     exit_msg = "EXIT"
                     client.send(exit_msg.encode())
                     pygame.quit()
-                    exit()
+                    break
 
                 if event.type == pygame.KEYUP:  # player movement
                     if event.key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
@@ -363,9 +367,12 @@ def main():
         elif game_phase == 3:  #reseting game
             start_background = init_phase0_background()
             screen.blit(start_background[0], start_background[1])
+
             font = pygame.font.Font("font/Pixeltype.ttf", 80)
             text = font.render(over_msg, False, "white")
             screen.blit(text, (120, background_height / 2 - 100))
+            text2 = font.render("press space to go back to the menu", False, "white")
+            screen.blit(text2, (120, background_height / 2))
             client.close()
             game_phase = 3.5
         elif game_phase == 3.5:
@@ -383,7 +390,10 @@ def main():
 
         pygame.display.update()
         clock.tick(60)
-    client.close()
+    try:
+        client.close()
+    except:
+        pass
 
 
 if __name__ == '__main__':
