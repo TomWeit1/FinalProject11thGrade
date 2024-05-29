@@ -122,7 +122,6 @@ class Bullet (pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, step):
         super().__init__()
-        self.alive = True
         self.width = 80
         self.height = 74
         self.image = pygame.transform.scale(pygame.image.load('images/FighterBase.png').convert_alpha(),

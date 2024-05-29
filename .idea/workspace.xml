@@ -20,6 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1db2613a-199c-4b9b-8fda-62f3526192aa" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Game_Client_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beta_client1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beta_client2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game_Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_Client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game_Client2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_Client2.py" afterDir="false" />
@@ -47,49 +50,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
   </component>
-  <component name="RunManager" selected="Python.Game_Client">
-    <configuration name="Game_Client - Copy (2)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="C:\Users\weitm\AppData\Local\Programs\Python\Python310\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Game_Client - Copy (2).py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Game_Client - Copy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="C:\Users\weitm\AppData\Local\Programs\Python\Python310\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Game_Client - Copy.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.beta_client2">
     <configuration name="Game_Client" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -111,7 +72,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Game_Client2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Game_Client_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -123,7 +84,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Game_Client2.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Game_Client_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -145,6 +106,48 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Server.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="beta_client1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\weitm\AppData\Local\Programs\Python\Python310\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/beta_client1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="beta_client2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\weitm\AppData\Local\Programs\Python\Python310\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/beta_client2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -178,17 +181,17 @@
       <item itemvalue="Python.main" />
       <item itemvalue="Python.Server" />
       <item itemvalue="Python.Game_Client" />
-      <item itemvalue="Python.Game_Client2" />
-      <item itemvalue="Python.Game_Client - Copy" />
-      <item itemvalue="Python.Game_Client - Copy (2)" />
+      <item itemvalue="Python.Game_Client_test" />
+      <item itemvalue="Python.beta_client1" />
+      <item itemvalue="Python.beta_client2" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Game_Client2" />
-        <item itemvalue="Python.Game_Client" />
+        <item itemvalue="Python.beta_client1" />
+        <item itemvalue="Python.beta_client2" />
         <item itemvalue="Python.Server" />
-        <item itemvalue="Python.Game_Client - Copy (2)" />
-        <item itemvalue="Python.Game_Client - Copy" />
+        <item itemvalue="Python.Game_Client" />
+        <item itemvalue="Python.Game_Client_test" />
       </list>
     </recent_temporary>
   </component>
@@ -219,22 +222,22 @@
       <screen x="0" y="0" width="1536" height="816" />
     </state>
     <state x="223" y="63" width="1089" height="713" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.816@0.0.1536.816" timestamp="1716912693980" />
-    <state width="1515" height="201" key="GridCell.Tab.0.bottom" timestamp="1717002228695">
+    <state width="1515" height="201" key="GridCell.Tab.0.bottom" timestamp="1717003789294">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="201" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1717002228695" />
-    <state width="1515" height="201" key="GridCell.Tab.0.center" timestamp="1717002228695">
+    <state width="1515" height="201" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1717003789294" />
+    <state width="1515" height="201" key="GridCell.Tab.0.center" timestamp="1717003789294">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="201" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1717002228695" />
-    <state width="1515" height="201" key="GridCell.Tab.0.left" timestamp="1717002228694">
+    <state width="1515" height="201" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1717003789294" />
+    <state width="1515" height="201" key="GridCell.Tab.0.left" timestamp="1717003789294">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="201" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1717002228694" />
-    <state width="1515" height="201" key="GridCell.Tab.0.right" timestamp="1717002228695">
+    <state width="1515" height="201" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1717003789294" />
+    <state width="1515" height="201" key="GridCell.Tab.0.right" timestamp="1717003789294">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="201" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1717002228695" />
+    <state width="1515" height="201" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1717003789294" />
     <state width="1515" height="258" key="GridCell.Tab.1.bottom" timestamp="1716034073558">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
