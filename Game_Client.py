@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 import socket
 import threading
+import time
 
 game_phase = "start"
 background_width = 1062
@@ -14,7 +15,6 @@ PORT = 12345
 class Player(pygame.sprite.Sprite):
     def __init__(self, step):
         super().__init__()
-        self.alive = True
         self.width = 80
         self.height = 74
         self.image = pygame.transform.scale(pygame.image.load('images/FighterBase.png').convert_alpha(), (self.width, self.height)) # player skin - (120, 110)
@@ -89,8 +89,8 @@ class Player(pygame.sprite.Sprite):
         return ammo
 
     def is_alive(self):
+        global game_phase
         if self.health <= 0:
-            self.alive = False
             game_over_msg = "OVER"
             game_over_msg += str(id)
             client.send(game_over_msg.encode())
@@ -255,15 +255,16 @@ def handle_recv(cli, id):
 
 
 def reset_game(loser):
-    global over_msg
+    global over_msg, game_phase
     if id == loser:
         over_msg = "You lost the match"
+        game_phase = "player_dead"
     elif loser == 3:  # if other player quit
         over_msg = "Other player quit"
+        game_phase = "reset_game"
     else:
         over_msg = "You won! good job!"
-    global game_phase
-    game_phase = "reset_game"
+        game_phase = "reset_game"
 
 
 
@@ -287,6 +288,7 @@ def main():
 
     player = Player(3)
     enemy = Enemy(-3)
+    i = 1
 
     while game_active:
         if game_phase == "start":
@@ -393,6 +395,17 @@ def main():
             player = Player(3)
             enemy = Enemy(-3)
             game_phase = "start"
+        elif game_phase == "player_dead":
+            p_image = pygame.image.load(f'images/Destruction_fighter/Destruction{i}.png')
+            player.image = pygame.transform.scale(p_image.convert_alpha(), (p_image.get_width() * (80/24), p_image.get_height() * (74/22)))
+            print(p_image.get_width())
+            player.rect = player.image.get_rect(midbottom=(background_width / 2, background_height - 100))
+            screen.blit(player.image, player.rect)
+            i += 1
+            time.sleep(0.05)
+            if i > 8:
+                game_phase = "reset_game"
+                i = 1
 
 
         pygame.display.update()
