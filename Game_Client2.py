@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 import socket
 import threading
+import time
 
 game_phase = "start"
 background_width = 1062
@@ -9,12 +10,12 @@ background_height = 708
 split_height = 8
 IP = 'localhost'
 PORT = 12345
+animation_speed = 0.05
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, step):
         super().__init__()
-        self.alive = True
         self.width = 80
         self.height = 74
         self.image = pygame.transform.scale(pygame.image.load('images/FighterBase.png').convert_alpha(), (self.width, self.height)) # player skin - (120, 110)
@@ -89,8 +90,8 @@ class Player(pygame.sprite.Sprite):
         return ammo
 
     def is_alive(self):
+        global game_phase
         if self.health <= 0:
-            self.alive = False
             game_over_msg = "OVER"
             game_over_msg += str(id)
             client.send(game_over_msg.encode())
@@ -255,21 +256,22 @@ def handle_recv(cli, id):
 
 
 def reset_game(loser):
-    global over_msg
+    global over_msg, game_phase
     if id == loser:
         over_msg = "You lost the match"
+        game_phase = "player_dead"
     elif loser == 3:  # if other player quit
         over_msg = "Other player quit"
+        game_phase = "reset_game"
     else:
         over_msg = "You won! good job!"
-    global game_phase
-    game_phase = "reset_game"
+        game_phase = "enemy_dead"
 
 
 
 
 def main():
-    global background_width, background_height, split_height, player, enemy, game_phase, id, client
+    global background_width, background_height, split_height, player, enemy, game_phase, id, client, animation_speed
     pygame.init()
     screen = pygame.display.set_mode((1062, 708))
     pygame.display.set_caption("DUAL")
@@ -287,6 +289,7 @@ def main():
 
     player = Player(3)
     enemy = Enemy(-3)
+    i = 1
 
     while game_active:
         if game_phase == "start":
@@ -393,6 +396,31 @@ def main():
             player = Player(3)
             enemy = Enemy(-3)
             game_phase = "start"
+        elif game_phase == "player_dead":
+            if i == 1:
+                p_center = player.rect.center
+            p_image = pygame.image.load(f'images/Destruction_fighter/Destruction{i}.png')
+            player.image = pygame.transform.scale(p_image.convert_alpha(), (p_image.get_width() * (80/24), p_image.get_height() * (74/22)))
+            player.rect = player.image.get_rect(center=p_center)
+            screen.blit(player.image, player.rect)
+            i += 1
+            time.sleep(animation_speed)
+            if i > 8:
+                game_phase = "reset_game"
+                i = 1
+        elif game_phase == "enemy_dead":
+            if i == 1:
+                e_center = enemy.rect.center
+            e_image = pygame.image.load(f'images/Destruction_fighter/Destruction{i}.png')
+            enemy.image = pygame.transform.scale(e_image.convert_alpha(), (e_image.get_width() * (80/24), e_image.get_height() * (74/22)))
+            enemy.image = pygame.transform.rotate(enemy.image, 180)
+            enemy.rect = enemy.image.get_rect(center=e_center)
+            screen.blit(enemy.image, enemy.rect)
+            i += 1
+            time.sleep(animation_speed)
+            if i > 8:
+                game_phase = "reset_game"
+                i = 1
 
 
         pygame.display.update()

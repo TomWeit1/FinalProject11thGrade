@@ -10,6 +10,7 @@ background_height = 708
 split_height = 8
 IP = 'localhost'
 PORT = 12345
+animation_speed = 0.05
 
 
 class Player(pygame.sprite.Sprite):
@@ -264,13 +265,13 @@ def reset_game(loser):
         game_phase = "reset_game"
     else:
         over_msg = "You won! good job!"
-        game_phase = "reset_game"
+        game_phase = "enemy_dead"
 
 
 
 
 def main():
-    global background_width, background_height, split_height, player, enemy, game_phase, id, client
+    global background_width, background_height, split_height, player, enemy, game_phase, id, client, animation_speed
     pygame.init()
     screen = pygame.display.set_mode((1062, 708))
     pygame.display.set_caption("DUAL")
@@ -396,13 +397,27 @@ def main():
             enemy = Enemy(-3)
             game_phase = "start"
         elif game_phase == "player_dead":
+            if i == 1:
+                p_center = player.rect.center
             p_image = pygame.image.load(f'images/Destruction_fighter/Destruction{i}.png')
             player.image = pygame.transform.scale(p_image.convert_alpha(), (p_image.get_width() * (80/24), p_image.get_height() * (74/22)))
-            print(p_image.get_width())
-            player.rect = player.image.get_rect(midbottom=(background_width / 2, background_height - 100))
+            player.rect = player.image.get_rect(center=p_center)
             screen.blit(player.image, player.rect)
             i += 1
-            time.sleep(0.05)
+            time.sleep(animation_speed)
+            if i > 8:
+                game_phase = "reset_game"
+                i = 1
+        elif game_phase == "enemy_dead":
+            if i == 1:
+                e_center = enemy.rect.center
+            e_image = pygame.image.load(f'images/Destruction_fighter/Destruction{i}.png')
+            enemy.image = pygame.transform.scale(e_image.convert_alpha(), (e_image.get_width() * (80/24), e_image.get_height() * (74/22)))
+            enemy.image = pygame.transform.rotate(enemy.image, 180)
+            enemy.rect = enemy.image.get_rect(center=e_center)
+            screen.blit(enemy.image, enemy.rect)
+            i += 1
+            time.sleep(animation_speed)
             if i > 8:
                 game_phase = "reset_game"
                 i = 1
