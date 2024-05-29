@@ -3,7 +3,7 @@ from sys import exit
 import socket
 import threading
 
-game_phase = 0
+game_phase = "start"
 background_width = 1062
 background_height = 708
 split_height = 8
@@ -263,7 +263,7 @@ def reset_game(loser):
     else:
         over_msg = "You won! good job!"
     global game_phase
-    game_phase = 3
+    game_phase = "reset_game"
 
 
 
@@ -289,7 +289,7 @@ def main():
     enemy = Enemy(-3)
 
     while game_active:
-        if game_phase == 0:
+        if game_phase == "start":
             screen.blit(start_background[0], start_background[1])
             font = pygame.font.Font("font/Pixeltype.ttf", 100)
             text = font.render("Press space to join game", False, "white")
@@ -297,17 +297,17 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        game_phase = 0.5
+                        game_phase = "set_wait_background"
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-        elif game_phase == 0.5:  # in between phases to set background
+        elif game_phase == "set_wait_background":  # in between phases to set background
             screen.blit(start_background[0], start_background[1])
             font = pygame.font.Font("font/Pixeltype.ttf", 80)
             text = font.render("Waiting for another player to join", False, "white")
             screen.blit(text, (120, background_height / 2 - 100))
-            game_phase = 1
-        elif game_phase == 1:
+            game_phase = "connecting_to_game"
+        elif game_phase == "connecting_to_game":
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((IP, PORT))
 
@@ -315,10 +315,10 @@ def main():
             while not data:
                 data = client.recv(5).decode()
             id = int(data[4])
-            game_phase = 2
+            game_phase = "gameplay"
             recv_thread = threading.Thread(target=handle_recv, args=(client, id))
             recv_thread.start()
-        elif game_phase == 2:
+        elif game_phase == "gameplay":
             player.ammo_regen(enemy)
             screen.blit(background, (0, 0))  # initiate background
             screen.blit(split, (0, (background_height - split_height) / 2))
@@ -371,7 +371,7 @@ def main():
 
             # display enemy ammo and health
             screen.blit(enemy.display_health(), (20, 15))
-        elif game_phase == 3:  #reseting game
+        elif game_phase == "reset_game":  #reseting game
             start_background = init_phase0_background()
             screen.blit(start_background[0], start_background[1])
 
@@ -381,8 +381,8 @@ def main():
             text2 = font.render("press space to go back to the menu", False, "white")
             screen.blit(text2, (120, background_height / 2))
             client.close()
-            game_phase = 3.5
-        elif game_phase == 3.5:
+            game_phase = "continue_reset"
+        elif game_phase == "continue_reset":
             wait = True
             while wait:
                 for event in pygame.event.get():
@@ -392,7 +392,7 @@ def main():
                             break
             player = Player(3)
             enemy = Enemy(-3)
-            game_phase = 0
+            game_phase = "start"
 
 
         pygame.display.update()
