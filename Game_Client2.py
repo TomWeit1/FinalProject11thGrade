@@ -92,7 +92,7 @@ class Player(pygame.sprite.Sprite):
         if self.health <= 0:
             self.alive = False
             game_over_msg = "OVER"
-            game_over_msg += id
+            game_over_msg += str(id)
             client.send(game_over_msg.encode())
 
 
@@ -224,26 +224,38 @@ def num_to_key(num):
 
 def handle_recv(cli, id):
     while True:
-        msg = cli.recv(7).decode()
-        if msg[0:4] == "MOVE":
-            if id == int(msg[4]):
-                if int(msg[5]) == 0:
-                    player.move_unpressed_key(num_to_key(int(msg[6])))
-                if int(msg[5]) == 1:
-                    player.move_pressed_key(num_to_key(int(msg[6])))
-            else:
-                if int(msg[5]) == 0:
-                    enemy.move_unpressed_key(num_to_key(int(msg[6])))
-                if int(msg[5]) == 1:
-                    enemy.move_pressed_key(num_to_key(int(msg[6])))
-        elif msg[0:4] == "SHOT":
-            if id == int(msg[4]):
-                player.shoot_bullet()
-            else:
-                enemy.shoot_bullet()
-        if msg[0:4] == "OVER":
-            print(msg[4])
-            game_phase = 2
+        try:
+            msg = cli.recv(7).decode()
+            if msg[0:4] == "MOVE":
+                if id == int(msg[4]):
+                    if int(msg[5]) == 0:
+                        player.move_unpressed_key(num_to_key(int(msg[6])))
+                    if int(msg[5]) == 1:
+                        player.move_pressed_key(num_to_key(int(msg[6])))
+                else:
+                    if int(msg[5]) == 0:
+                        enemy.move_unpressed_key(num_to_key(int(msg[6])))
+                    if int(msg[5]) == 1:
+                        enemy.move_pressed_key(num_to_key(int(msg[6])))
+            elif msg[0:4] == "SHOT":
+                if id == int(msg[4]):
+                    player.shoot_bullet()
+                else:
+                    enemy.shoot_bullet()
+            if msg[0:4] == "OVER":
+                reset_game(int(msg[4]))
+        except:
+            pass
+
+
+def reset_game(loser):
+    global over_msg
+    if id == loser:
+        over_msg = "You lost the match, press space to go back to the menu"
+    else:
+        over_msg = "You won! good job! press space to go back to the menu"
+    global game_phase
+    game_phase = 3
 
 
 
@@ -348,6 +360,26 @@ def main():
 
             # display enemy ammo and health
             screen.blit(enemy.display_health(), (20, 15))
+        elif game_phase == 3:  #reseting game
+            start_background = init_phase0_background()
+            screen.blit(start_background[0], start_background[1])
+            font = pygame.font.Font("font/Pixeltype.ttf", 80)
+            text = font.render(over_msg, False, "white")
+            screen.blit(text, (120, background_height / 2 - 100))
+            client.close()
+            game_phase = 3.5
+        elif game_phase == 3.5:
+            wait = True
+            while wait:
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            wait = False
+                            break
+            player = Player(3)
+            enemy = Enemy(-3)
+            game_phase = 0
+
 
         pygame.display.update()
         clock.tick(60)
