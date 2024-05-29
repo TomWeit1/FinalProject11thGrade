@@ -243,11 +243,15 @@ def handle_recv(cli, id):
                 else:
                     enemy.shoot_bullet()
             if msg[0:4] == "OVER":
+                overrc_msg = "OVRC"  # Over received by client
+                cli.send(overrc_msg.encode())
                 reset_game(int(msg[4]))
             if msg[0:4] == "EXIT" and int(msg[4]) != id:
+                exitrc_msg = "EXRC"  # Exit received by client
+                cli.send(exitrc_msg.encode())
                 reset_game(3)
         except:
-            pass
+            break
 
 
 def reset_game(loser):
@@ -342,6 +346,9 @@ def main():
                         msg_down = create_MOVE_msg(1, key_to_num(event.key))
                         client.send(msg_down.encode())
 
+            if not game_active:
+                break
+
             #render player
             player.move_in_border()
             screen.blit(player.image, player.rect)
@@ -394,6 +401,7 @@ def main():
         client.close()
     except:
         pass
+    recv_thread.join()
 
 
 if __name__ == '__main__':

@@ -22,8 +22,12 @@ def handle_msg(data, cli, id):
     if data == "OVER":
         loser_id = cli.recv(1).decode()
         msg = "OVER" + loser_id
+    if data == "OVRC":
+        msg = "OVRC"
     if data == "EXIT":
         msg = "EXIT" + str(id)
+    if data == "EXRC":
+        msg = "EXRC"
 
     print(msg)
     return msg
@@ -35,11 +39,22 @@ def send_both(msg, cli1, cli2):
 
 
 def handle(cli, id, other_cli):
-    while True:
+    game_alive = True
+    while game_alive:
         try:
             data = cli.recv(4).decode()
             msg = handle_msg(data, cli, id)
-            send_both(msg, cli, other_cli)
+            if msg[0:4] == "EXIT":
+                print("Game ended because client quit")
+                other_cli.send(msg.encode())
+                game_alive = False
+            elif msg[0:4] == "EXRC":
+                print("Other client quit")
+                game_alive = False
+            elif msg[0:4] == "OVRC":
+                game_alive = False
+            else:
+                send_both(msg, cli, other_cli)
 
         except socket.error as err:
             print(f'Socket Error exit client loop: err:  {err}')

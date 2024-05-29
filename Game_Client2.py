@@ -243,11 +243,15 @@ def handle_recv(cli, id):
                 else:
                     enemy.shoot_bullet()
             if msg[0:4] == "OVER":
+                overrc_msg = "OVRC"  # Over received by client
+                cli.send(overrc_msg.encode())
                 reset_game(int(msg[4]))
             if msg[0:4] == "EXIT" and int(msg[4]) != id:
+                exitrc_msg = "EXRC"  # Exit received by client
+                cli.send(exitrc_msg.encode())
                 reset_game(3)
         except:
-            pass
+            break
 
 
 def reset_game(loser):
@@ -284,7 +288,7 @@ def main():
     player = Player(3)
     enemy = Enemy(-3)
 
-    while True:
+    while game_active:
         if game_phase == 0:
             screen.blit(start_background[0], start_background[1])
             font = pygame.font.Font("font/Pixeltype.ttf", 100)
@@ -324,7 +328,7 @@ def main():
                     exit_msg = "EXIT"
                     client.send(exit_msg.encode())
                     pygame.quit()
-                    break
+                    game_active = False
 
                 if event.type == pygame.KEYUP:  # player movement
                     if event.key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
@@ -341,6 +345,9 @@ def main():
                     elif event.key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
                         msg_down = create_MOVE_msg(1, key_to_num(event.key))
                         client.send(msg_down.encode())
+
+            if not game_active:
+                break
 
             #render player
             player.move_in_border()
@@ -394,6 +401,7 @@ def main():
         client.close()
     except:
         pass
+    recv_thread.join()
 
 
 if __name__ == '__main__':

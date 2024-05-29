@@ -220,22 +220,22 @@
       <screen x="0" y="0" width="1536" height="816" />
     </state>
     <state x="223" y="63" width="1089" height="713" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.816@0.0.1536.816" timestamp="1716912693980" />
-    <state width="1515" height="201" key="GridCell.Tab.0.bottom" timestamp="1716968241049">
+    <state width="1515" height="201" key="GridCell.Tab.0.bottom" timestamp="1716970168645">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="201" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1716968241049" />
-    <state width="1515" height="201" key="GridCell.Tab.0.center" timestamp="1716968241049">
+    <state width="1515" height="201" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1716970168645" />
+    <state width="1515" height="201" key="GridCell.Tab.0.center" timestamp="1716970168645">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="201" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1716968241049" />
-    <state width="1515" height="201" key="GridCell.Tab.0.left" timestamp="1716968241049">
+    <state width="1515" height="201" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1716970168645" />
+    <state width="1515" height="201" key="GridCell.Tab.0.left" timestamp="1716970168645">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="201" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1716968241049" />
-    <state width="1515" height="201" key="GridCell.Tab.0.right" timestamp="1716968241049">
+    <state width="1515" height="201" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1716970168645" />
+    <state width="1515" height="201" key="GridCell.Tab.0.right" timestamp="1716970168645">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state width="1515" height="201" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1716968241049" />
+    <state width="1515" height="201" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1716970168645" />
     <state width="1515" height="258" key="GridCell.Tab.1.bottom" timestamp="1716034073558">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
@@ -263,7 +263,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Game_Client.py</url>
-          <line>317</line>
+          <line>321</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
